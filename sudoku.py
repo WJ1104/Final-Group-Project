@@ -1,5 +1,6 @@
 from sudoku_generator import generate_sudoku
 #from board import Board (add later)
+from sudoku_generator import generate_sudoku
 
 import pygame
 
