@@ -1,7 +1,7 @@
 from sudoku_generator import generate_sudoku
+import pygame
 
 def print_board(board):
-    """Print the Sudoku board in a nice format"""
     if not board:
         print("No board to display")
         return
