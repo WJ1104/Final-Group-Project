@@ -1,4 +1,5 @@
 from sudoku_generator import generate_sudoku
+#from board import Board (add later)
 
 def print_board(board):
     """Print the Sudoku board in a nice format"""
