@@ -1,4 +1,9 @@
+import pygame
 from sudoku_generator import generate_sudoku
+from board import Board 
+from sudoku_generator import generate_sudoku
+
+pygame.init()
 
 def print_board(board):
     """Print the Sudoku board in a nice format"""
@@ -38,6 +43,8 @@ def main():
         print("- is_valid()")
         print("- fill_box(), fill_diagonal()")
         print("- remove_cells()")
+
+    pygame.quit()
 
 if __name__ == "__main__":
     main()
