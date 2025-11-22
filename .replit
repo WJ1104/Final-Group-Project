@@ -1,4 +1,4 @@
-modules = ["bash", "python-3.11"]
+modules = ["python-3.11", "bash"]
 [agent]
 expertMode = true
 
@@ -22,9 +22,9 @@ args = "Run Sudoku"
 name = "Run Sudoku"
 author = "agent"
 
+[workflows.workflow.metadata]
+outputType = "vnc"
+
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "python sudoku.py"
-
-[workflows.workflow.metadata]
-outputType = "console"
+args = "uv run python sudoku.py"
