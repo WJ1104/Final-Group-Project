@@ -10,8 +10,18 @@ class Board:
         self.screen = screen
         self.difficulty = difficulty
         self.board = generate_sudoku(9, difficulty)
+        self.original_board = [row[:] for row in self.board]
         self.cells = self._create_cells()
         self.selected_cell = None
+
+        self.cell_size = self.width // 9
+
+        #centers the board by adding offset
+        self.x_offset = (600 - self.width) // 2
+        self.y_offset = (600 - self.height) // 2
+
+
+
 
     def _create_cells(self):
         cells = []
@@ -24,41 +34,58 @@ class Board:
 
     def draw(self):
         for r in range(10):
-            width = 4 if r % 3 == 0 else 1
-            pygame.draw.line(self.screen, (0, 0, 0), (0, r * 60), (540, r * 60), width)
-            pygame.draw.line(self.screen, (0, 0, 0), (r * 60, 0), (r * 60, 540), width)
+            thickness = 4 if r % 3 == 0 else 1
+            pygame.draw.line(self.screen, (0, 0, 0),
+                 (self.x_offset, self.y_offset + r*self.cell_size),
+                 (self.x_offset + self.width, self.y_offset + r*self.cell_size),
+                 thickness)
+            pygame.draw.line(self.screen, (0, 0, 0),
+                 (self.x_offset + r*self.cell_size, self.y_offset),
+                 (self.x_offset + r*self.cell_size, self.y_offset + self.height),
+                 thickness)
 
         for row in self.cells:
             for cell in row:
-                cell.draw()
+                cell.draw(self.cell_size, self.x_offset, self.y_offset)
 
     def select(self, row, col):
         if self.selected_cell:
             r, c = self.selected_cell
             self.cells[r][c].selected = False
+
         self.cells[row][col].selected = True
         self.selected_cell = (row, col)
 
     def click(self, x, y):
-        if x < 540 and y < 540:
-            return (y // 60, x // 60)
+
+        x_rel = x - self.x_offset #Need these because of the offset added
+        y_rel = y - self.y_offset
+
+        if 0 <= x < self.width and 0 <= y < self.height:
+            return (y_rel // self.cell_size, x_rel // self.cell_size)
         return None
 
     def clear(self):
         if self.selected_cell:
             r, c = self.selected_cell
-            if self.cells[r][c].value == 0:
+
+            if self.original_board[r][c] == 0:
                 self.cells[r][c].sketched_value = 0
+                if self.cells[r][c].value != 0:
+                    self.cells[r][c].value = 0
 
     def sketch(self, value):
         if self.selected_cell:
             r, c = self.selected_cell
-            self.cells[r][c].set_sketched_value(value)
+            if self.original_board[r][c] == 0:
+                self.cells[r][c].set_sketched_value(value)
+                self.cells[r][c].sketched_value = 0
 
     def place_number(self, value):
         if self.selected_cell:
             r, c = self.selected_cell
             self.cells[r][c].set_cell_value(value)
+            self.cells[r][c].sketched_value = 0
 
     def reset_to_original(self):
         for r in range(9):
@@ -86,13 +113,16 @@ class Board:
         return None
 
     def check_board(self):
+        self.update_board()
+
         for r in range(9):
-            if len(set(self.board[r])) != 9:
+            if sorted(self.board[r]) != list(range(1, 10)):
                 return False
 
+
         for c in range(9):
-            col_vals = [self.board[r][c] for r in range(9)]
-            if len(set(col_vals)) != 9:
+            col = [self.board[r][c] for r in range(9)]
+            if sorted(col) != list(range(1, 10)):
                 return False
 
         for rs in range(0, 9, 3):
@@ -101,7 +131,6 @@ class Board:
                 for r in range(rs, rs + 3):
                     for c in range(cs, cs + 3):
                         block.append(self.board[r][c])
-                if len(set(block)) != 9:
+                if sorted(block) != list(range(1, 10)):
                     return False
-
         return True

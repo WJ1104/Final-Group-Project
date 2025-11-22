@@ -116,12 +116,12 @@ def play_game(screen, removed_cells):
                     key = None
                     continue
                 elif event.key == pygame.K_RETURN:
-                    if board.select and key:
-                        row, col = board.select
+                    if board.selected_cell and key:
+                        row, col = board.selected_cell
                         board.place_number(key)
                         key = None
 
-        if board.select and key:
+        if board.selected_cell and key:
             board.sketch(key)
 
         if board.is_full():
