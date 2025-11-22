@@ -9,30 +9,33 @@ class Cell:
       self.temp = 0
       self.selected = False
 
+def set_cell_value(self, value): 
+    self.value= value 
 
-  def set_value(self, value):
-      self.value = value
-    
-  def set_temp(self, value):
-      self.temp = value
+def set_sketched_value(self, value): 
+    self.sketched_value= value 
 
-  def draw(self, cell_size = 60):
-      x = self.col * cell_size # x position of cell
-      y = self.row * cell_size # y position of cell
+def draw(self): 
+    font = pygame.font.SysFont(None, 40)
+    x = self.col * 60
+    y = self.row * 60
 
-      if self.selected: 
-          pygame.draw.rect(self.screen, (255, 0, 0), (x, y, cell_size, cell_size), 3)
+    rect = pygame.Rect(x, y, 60, 60)
+    pygame.draw.rect(self.screen, (0, 0, 0), rect, 1)
 
-      font = pygame.font.Font(None, 40) 
+    if self.selected:
+        pygame.draw.rect(self.screen, (255, 0, 0), rect, 3)
 
-      if self.value != 0:
-          text = font.render(str(self.value), True, (0, 0, 0)) 
-          self.screen.blit(text, (x + cell_size // 2 - text.get_width() // 2,
-                                  y + cell_size // 2 - text.get_height() // 2)) 
+    if self.value != 0:
+        text = font.render(str(self.value), True, (0, 0, 0))
+        self.screen.blit(text, (x + 20, y + 10))
 
-      elif self.temp != 0:
-          temp_font = pygame.font.Font(None, 25)
-          text = temp_font.render(str(self.temp), True, (128, 128, 128)) 
-          self.screen.blit(text, (x + 5, y + 5)) 
+    elif self.sketched_value != 0:
+        sketch_font = pygame.font.SysFont(None, 20)
+        text = sketch_font.render(str(self.sketched_value), True, (100, 100, 100))
+        self.screen.blit(text, (x + 5, y + 5))
+ 
 
 
+
+ 
