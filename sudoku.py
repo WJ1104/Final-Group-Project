@@ -2,15 +2,15 @@ import pygame
 from sudoku_generator import generate_sudoku
 from board import Board
 
-
 pygame.init()
+
 
 def print_board(board):
     """Print the Sudoku board in a nice format"""
     if not board:
         print("No board to display")
         return
-    
+
     for i, row in enumerate(board):
         if i % 3 == 0 and i != 0:
             print("-" * 21)
@@ -25,7 +25,7 @@ def print_board(board):
 def draw_button(screen, text, x, y, w, h, color, font):
     pygame.draw.rect(screen, color, (x, y, w, h))
     label = font.render(text, True, (0, 0, 0))
-    screen.blit(label, (x + w//2 - label.get_width()//2, y + h//2 - label.get_height()//2))
+    screen.blit(label, (x + w // 2 - label.get_width() // 2, y + h // 2 - label.get_height() // 2))
 
 
 def start_menu(screen, menu_background):
@@ -35,8 +35,7 @@ def start_menu(screen, menu_background):
     while True:
         screen.blit(menu_background, (0, 0))
         title = font.render("Sudoku", True, (0, 0, 0))
-        screen.blit(title, (300 - title.get_width() //2, 80))
-
+        screen.blit(title, (300 - title.get_width() // 2, 80))
 
         draw_button(screen, "Easy", 200, 200, 200, 60, (200, 200, 200), small_font)
         draw_button(screen, "Medium", 200, 300, 200, 60, (200, 200, 200), small_font)
@@ -62,7 +61,7 @@ def start_menu(screen, menu_background):
 
 def play_game(screen, removed_cells):
     board_list = generate_sudoku(9, removed_cells)
-    board = Board(540, 540, screen, removed_cells, board_list=board_list)
+    board = Board(540, 540, screen, removed_cells)
 
     running = True
     key = None
@@ -73,7 +72,6 @@ def play_game(screen, removed_cells):
     while running:
         screen.fill((255, 255, 255))
         board.draw()
-
 
         font = pygame.font.Font(None, 30)
         text = font.render("Back", True, (0, 0, 0))
@@ -118,16 +116,16 @@ def play_game(screen, removed_cells):
                     key = None
                     continue
                 elif event.key == pygame.K_RETURN:
-                    if board.selected and key:
-                        row, col = board.selected
+                    if board.select and key:
+                        row, col = board.select
                         board.place_number(key)
                         key = None
 
-        if board.selected and key:
+        if board.select and key:
             board.sketch(key)
 
         if board.is_full():
-            if board.check_board():  #correct board
+            if board.check_board():  # correct board
                 font = pygame.font.Font(None, 60)
                 text = font.render("You Win!", True, (0, 128, 9))
                 screen.blit(text, (300 - text.get_width() // 2, 300 - text.get_height() // 2))
@@ -141,6 +139,7 @@ def play_game(screen, removed_cells):
                 pygame.display.update()
                 pygame.time.delay(5000)
                 return
+
 
 def main():
     pygame.init()
@@ -158,28 +157,6 @@ def main():
             break
         play_game(screen, removed)
     pygame.quit()
-
-    print("=" * 40)
-    print("Welcome to Sudoku!")
-    print("=" * 40)
-    print("\nThis is a Sudoku project template.")
-    print("The core classes (Board, Cell) need to be implemented.")
-    print("\nGenerating a sample 9x9 Sudoku puzzle with 30 removed cells...")
-    print()
-    
-    try:
-        board = generate_sudoku(9, 30)
-        print("Generated Sudoku Board:")
-        print_board(board)
-        print("\nNote: '.' represents empty cells")
-    except Exception as e:
-        print(f"Error generating Sudoku: {e}")
-        print("\nThe sudoku_generator.py has stub methods that need to be implemented:")
-        print("- get_board()")
-        print("- valid_in_row(), valid_in_col(), valid_in_box()")
-        print("- is_valid()")
-        print("- fill_box(), fill_diagonal()")
-        print("- remove_cells()")
 
 
 
